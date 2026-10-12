@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deodoran Herbal Daun Sirih</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon:#7cff6b; --lime:#c6ff8a; --gold:#f5d97a; --deep:#04140a;
+  --text:#eafbe7; --muted:#b5d8b0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--deep);color:var(--text);
+  font-family:'Poppins',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ================= LATAR HUTAN ================= */
+.scene{position:fixed;inset:0;overflow:hidden;
+  background:radial-gradient(ellipse at 72% -5%,#4fa35a 0%,#237a42 22%,#0f4a2a 50%,#06220f 80%,#031008 100%)}
+.rays{position:absolute;inset:-30%;mix-blend-mode:screen;filter:blur(7px);opacity:.55;
+  background:
+   conic-gradient(from 195deg at 72% 0%,transparent 0 6deg,rgba(255,250,190,.28) 8deg,transparent 12deg,
+   transparent 16deg,rgba(255,250,190,.2) 19deg,transparent 22deg,
+   transparent 27deg,rgba(255,250,190,.25) 30deg,transparent 35deg,
+   transparent 40deg,rgba(255,250,190,.16) 43deg,transparent 47deg,transparent 360deg);
+  animation:rays 14s ease-in-out infinite alternate}
+@keyframes rays{from{transform:rotate(-3deg);opacity:.35}to{transform:rotate(3deg);opacity:.7}}
+.layer{position:absolute;left:-10%;right:-10%;top:0;bottom:0;transition:transform 1.3s cubic-bezier(.2,.7,.2,1)}
+.tree{position:absolute;bottom:-2%;border-radius:40% 40% 0 0/6% 6% 0 0;
+  background:
+   repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 2px,transparent 2px 7px),
+   linear-gradient(90deg,#010603 0%,#0c2112 30%,#234a2b 52%,#0a1c0f 75%,#010603 100%)}
+.tree::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.0) 0%,rgba(0,0,0,.0) 60%,rgba(0,0,0,.55) 100%)}
+.l-far{filter:blur(5px);opacity:.45}
+.l-mid{filter:blur(2px);opacity:.8}
+.l-near .tree{box-shadow:0 0 60px rgba(0,0,0,.7)}
+.canopy{position:absolute;left:-5%;right:-5%;top:-6%;height:34%;pointer-events:none;filter:blur(3px);
+  background:
+   radial-gradient(ellipse 18% 70% at 6% 20%,#031a0a 0 55%,transparent 72%),
+   radial-gradient(ellipse 22% 80% at 24% 5%,#052711 0 55%,transparent 72%),
+   radial-gradient(ellipse 20% 60% at 46% 0%,#04210e 0 55%,transparent 72%),
+   radial-gradient(ellipse 24% 85% at 66% -5%,#062a12 0 50%,transparent 72%),
+   radial-gradient(ellipse 18% 70% at 90% 10%,#031a0a 0 55%,transparent 72%)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:26%;pointer-events:none;
+  background:
+   radial-gradient(ellipse 14% 60% at 8% 100%,#0e3a18 0 50%,transparent 75%),
+   radial-gradient(ellipse 16% 70% at 30% 105%,#14531f 0 50%,transparent 75%),
+   radial-gradient(ellipse 18% 60% at 55% 105%,#0b2f14 0 50%,transparent 75%),
+   radial-gradient(ellipse 15% 70% at 78% 105%,#17602a 0 50%,transparent 75%),
+   radial-gradient(ellipse 14% 60% at 98% 100%,#0e3a18 0 50%,transparent 75%),
+   linear-gradient(0deg,#020a05 0%,transparent 100%)}
+.mist{position:absolute;width:90%;height:40%;border-radius:50%;filter:blur(40px);opacity:.28;pointer-events:none;
+  background:radial-gradient(ellipse,rgba(210,255,220,.55),transparent 70%)}
+.m1{left:-20%;bottom:8%;animation:mist 26s linear infinite alternate}
+.m2{right:-25%;bottom:22%;animation:mist 34s linear infinite alternate-reverse}
+@keyframes mist{from{transform:translateX(-8%)}to{transform:translateX(14%)}}
+.vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,8,3,.78) 100%)}
+canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ================= DECK & TRANSISI ================= */
+.deck{position:fixed;inset:0;--dir:1;--in:inZoom;--out:outZoom;perspective:1800px;z-index:5}
+.fx-zoom{--in:inZoom;--out:outZoom}
+.fx-slide{--in:inSlide;--out:outSlide}
+.fx-flip{--in:inFlip;--out:outFlip}
+.fx-rise{--in:inRise;--out:outRise}
+.fx-iris{--in:inIris;--out:outIris}
+.fx-spin{--in:inSpin;--out:outSpin}
+.slide{position:absolute;inset:0;display:none;padding:clamp(18px,4vw,52px) clamp(16px,5vw,84px) 96px;
+  overflow-y:auto;overflow-x:hidden;transform-style:preserve-3d;scrollbar-width:thin}
+.slide.active,.slide.leaving{display:flex}
+.slide.active{animation:var(--in) .95s cubic-bezier(.22,.8,.2,1) both;z-index:2}
+.slide.leaving{animation:var(--out) .8s cubic-bezier(.5,0,.8,.4) both;z-index:1;pointer-events:none}
+.wrap{margin:auto;width:100%;max-width:1220px}
+@keyframes inZoom{from{opacity:0;transform:scale(.7);filter:blur(16px)}to{opacity:1;transform:none;filter:none}}
+@keyframes outZoom{to{opacity:0;transform:scale(1.35);filter:blur(16px)}}
+@keyframes inSlide{from{opacity:0;transform:translateX(calc(var(--dir)*75%))}to{opacity:1;transform:none}}
+@keyframes outSlide{to{opacity:0;transform:translateX(calc(var(--dir)*-75%))}}
+@keyframes inFlip{from{opacity:0;transform:rotateY(calc(var(--dir)*-85deg)) translateZ(-250px)}to{opacity:1;transform:none}}
+@keyframes outFlip{to{opacity:0;transform:rotateY(calc(var(--dir)*85deg)) translateZ(-250px)}}
+@keyframes inRise{from{opacity:0;transform:translateY(calc(var(--dir)*65%))}to{opacity:1;transform:none}}
+@keyframes outRise{to{opacity:0;transform:translateY(calc(var(--dir)*-65%))}}
+@keyframes inIris{from{clip-path:circle(0% at 50% 50%)}to{clip-path:circle(150% at 50% 50%)}}
+@keyframes outIris{to{opacity:0;transform:scale(.93)}}
+@keyframes inSpin{from{opacity:0;transform:translateX(calc(var(--dir)*30%)) rotate(calc(var(--dir)*9deg)) scale(.82);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+@keyframes outSpin{to{opacity:0;transform:translateX(calc(var(--dir)*-30%)) rotate(calc(var(--dir)*-9deg)) scale(.82);filter:blur(10px)}}
+.rv{opacity:0}
+.slide.active .rv{animation:rv .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*.12s + .5s)}
+@keyframes rv{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+
+/* ================= KOMPONEN ================= */
+.glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.04));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(180,255,170,.26);border-radius:22px;
+  box-shadow:0 22px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.28),0 0 30px rgba(124,255,107,.06)}
+.split{display:grid;grid-template-columns:minmax(250px,33%) 1fr;gap:clamp(18px,3vw,44px);align-items:stretch}
+.materi{position:relative;padding:clamp(22px,3vw,40px);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.materi::before{content:"";position:absolute;right:-40px;bottom:-40px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,255,107,.35),transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.35);opacity:.6}}
+.eyebrow{font-size:.78rem;letter-spacing:.35em;color:var(--lime);font-weight:600}
+.num{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(4.5rem,10vw,8rem);line-height:1;margin:.1em 0;
+  background:linear-gradient(180deg,#e8ffc8,#7cff6b 55%,#1f9d46);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(124,255,107,.55))}
+.materi h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.6vw,2.2rem);margin:0 0 .6em;line-height:1.2}
+.bar{height:3px;width:90px;border-radius:3px;background:linear-gradient(90deg,var(--neon),transparent);box-shadow:0 0 14px var(--neon)}
+.isi{display:flex;flex-direction:column;gap:clamp(12px,1.6vw,20px);justify-content:center}
+.card{padding:clamp(16px,2vw,26px)}
+.card h3{margin:0 0 .5em;font-size:1.02rem;color:var(--gold);letter-spacing:.04em;display:flex;align-items:center;gap:.6em}
+.card h3 .ic{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;font-size:1rem;
+  background:radial-gradient(circle,rgba(124,255,107,.35),rgba(124,255,107,.08));border:1px solid rgba(124,255,107,.5);
+  box-shadow:0 0 14px rgba(124,255,107,.4)}
+.card p,.card li{margin:0;color:#dff3da;line-height:1.7;font-size:clamp(.92rem,1.25vw,1.05rem);font-weight:300}
+.card ul{margin:0;padding-left:1.2em}
+.card li+li{margin-top:.4em}
+.card b{color:var(--lime);font-weight:600}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.6vw,20px)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:999px;font-size:.88rem;background:rgba(124,255,107,.12);
+  border:1px solid rgba(124,255,107,.4);color:#e6ffe0;box-shadow:0 0 12px rgba(124,255,107,.15)}
+.chip.gold{background:rgba(245,217,122,.12);border-color:rgba(245,217,122,.5)}
+.arrow{color:var(--neon);font-weight:600;align-self:center;text-shadow:0 0 8px var(--neon)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+table.tax{width:100%;border-collapse:collapse;font-size:.95rem}
+table.tax td{padding:7px 4px;border-bottom:1px dashed rgba(180,255,170,.22);font-weight:300}
+table.tax td:first-child{color:var(--gold);width:38%;font-weight:500}
+.steps{display:grid;gap:clamp(12px,1.6vw,18px)}
+.step{display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:start}
+.badge{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:1.3rem;color:#032;
+  background:radial-gradient(circle at 35% 30%,#e8ffc8,#7cff6b 60%,#1f9d46);box-shadow:0 0 22px rgba(124,255,107,.7)}
+.step h3{margin:.1em 0 .4em}
+
+/* ================= COVER ================= */
+.cover{display:grid;grid-template-columns:1.25fr 1fr;gap:30px;align-items:center}
+.tag{display:inline-block;padding:7px 18px;border-radius:999px;letter-spacing:.3em;font-size:.72rem;color:var(--lime);
+  border:1px solid rgba(124,255,107,.5);background:rgba(124,255,107,.08)}
+.cover h1{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.9rem,4.6vw,3.7rem);line-height:1.12;margin:.5em 0 .4em;
+  background:linear-gradient(120deg,#fff 0%,#d9ffb5 35%,#7cff6b 70%,#f5d97a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,.5))}
+.cover .sub{font-size:clamp(.95rem,1.6vw,1.2rem);color:#d6efd1;font-weight:300;line-height:1.7;max-width:640px}
+.cover .sub i{color:var(--lime)}
+.author{margin-top:1.8em;padding:14px 22px;display:inline-flex;gap:14px;align-items:center}
+.author .dot{width:12px;height:12px;border-radius:50%;background:var(--neon);box-shadow:0 0 14px var(--neon);animation:pulse 2.4s infinite}
+.author small{display:block;color:var(--muted);letter-spacing:.2em;font-size:.68rem}
+.author strong{font-weight:500;font-size:1.02rem}
+.energy{position:relative;display:grid;place-items:center;aspect-ratio:1}
+.energy svg{width:min(100%,430px);overflow:visible;animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-14px) rotate(2deg)}}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(124,255,107,.5);width:60%;aspect-ratio:1;animation:ring 4s ease-out infinite}
+.ring:nth-child(2){animation-delay:1.3s}.ring:nth-child(3){animation-delay:2.6s}
+@keyframes ring{from{transform:scale(.6);opacity:.9}to{transform:scale(1.6);opacity:0}}
+.vein{stroke-dasharray:14 10;animation:flow 2.2s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-48}}
+.core{animation:pulse 2.6s ease-in-out infinite;transform-origin:120px 140px}
+
+/* ================= NAVIGASI ================= */
+.progress{position:fixed;left:0;top:0;height:4px;width:0;z-index:30;transition:width .8s cubic-bezier(.2,.8,.2,1);
+  background:linear-gradient(90deg,#1f9d46,var(--neon),var(--gold));box-shadow:0 0 16px var(--neon)}
+.nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:14px;
+  padding:8px 14px;border-radius:999px;background:rgba(3,20,9,.65);backdrop-filter:blur(12px);
+  border:1px solid rgba(124,255,107,.3);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nav button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;
+  color:#dfffd6;background:rgba(124,255,107,.12);border:1px solid rgba(124,255,107,.4);transition:.25s}
+.nav button:hover{background:var(--neon);color:#031;box-shadow:0 0 18px var(--neon);transform:scale(1.1)}
+.nav button:disabled{opacity:.3;pointer-events:none}
+.dots{display:flex;gap:7px}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.35s}
+.dots i.on{width:26px;border-radius:6px;background:var(--neon);box-shadow:0 0 12px var(--neon)}
+.count{font-size:.8rem;color:var(--muted);min-width:56px;text-align:center;letter-spacing:.1em}
+
+@media(max-width:860px){
+  .split,.cover,.cols{grid-template-columns:1fr}
+  .materi{padding:18px 22px}
+  .num{font-size:4rem}
+  .energy{max-width:280px;margin:0 auto;order:-1}
+  .dots{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+
+<div class="scene" id="scene">
+  <div class="rays"></div>
+  <div class="layer l-far" id="lFar"></div>
+  <div class="layer l-mid" id="lMid"></div>
+  <div class="canopy"></div>
+  <div class="mist m1"></div>
+  <div class="layer l-near" id="lNear"></div>
+  <div class="ground"></div>
+  <div class="mist m2"></div>
+  <canvas id="fx"></canvas>
+  <div class="vignette"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<main class="deck" id="deck">
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide">
+  <div class="wrap cover">
+    <div>
+      <span class="tag rv">PROYEK PENELITIAN</span>
+      <h1 class="rv">PEMANFAATAN EKSTRAK DAUN SIRIH SEBAGAI BAHAN DALAM PRODUK DEODORANT HERBAL</h1>
+      <p class="sub rv">Formulasi Deodoran Spray Ekstrak Daun Sirih (<i>Piper betle</i> L.) dengan Kombinasi Minyak Serai Merah (<i>Cymbopogon nardus</i> L.)</p>
+      <div class="author glass rv">
+        <span class="dot"></span>
+        <div><small>PENYUSUN</small><strong>Muhammad Rayhan Rizky Pratama</strong><br><small style="margin-top:2px">SMA GUNUNG MADU</small></div>
+      </div>
+    </div>
+    <div class="energy rv">
+      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      <svg viewBox="0 0 240 270" aria-label="Daun sirih berenergi">
+        <defs>
+          <radialGradient id="lf" cx="50%" cy="40%" r="70%">
+            <stop offset="0" stop-color="#8dff7a"/><stop offset=".55" stop-color="#2fae4f"/><stop offset="1" stop-color="#0d4a22"/>
+          </radialGradient>
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <circle class="core" cx="120" cy="140" r="90" fill="rgba(124,255,107,.18)" filter="url(#glow)"/>
+        <path d="M120 14 C70 50 8 88 26 158 C38 205 88 236 120 250 C152 236 202 205 214 158 C232 88 170 50 120 14Z"
+              fill="url(#lf)" stroke="#caffa0" stroke-width="2" filter="url(#glow)"/>
+        <g fill="none" stroke="#e8ffc8" stroke-linecap="round" filter="url(#glow)">
+          <path class="vein" stroke-width="3" d="M120 258 L120 30"/>
+          <path class="vein" stroke-width="2" d="M120 95 Q86 100 48 128"/>
+          <path class="vein" stroke-width="2" d="M120 95 Q154 100 192 128"/>
+          <path class="vein" stroke-width="2" d="M120 140 Q82 148 40 176"/>
+          <path class="vein" stroke-width="2" d="M120 140 Q158 148 200 176"/>
+          <path class="vein" stroke-width="2" d="M120 188 Q92 196 66 214"/>
+          <path class="vein" stroke-width="2" d="M120 188 Q148 196 174 214"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 : LATAR BELAKANG ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">MATERI</span>
+      <div class="num">02</div>
+      <h2>Latar Belakang</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">🦠</span>Penyebab Bau Badan</h3>
+        <p>Bau badan berasal dari penguraian keringat oleh <b>bakteri kulit</b> di area kelenjar apokrin (ketiak).</p></div>
+      <div class="card glass rv"><h3><span class="ic">⚠️</span>Deodoran Komersial</h3>
+        <p>Umumnya mengandung zat kimia sintetik seperti <b>paraben</b> dan <b>aluminium salts</b> yang berisiko bagi kesehatan.</p></div>
+      <div class="card glass rv"><h3><span class="ic">🌿</span>Solusi Alami</h3>
+        <p>Daun sirih mengandung <b>flavonoid</b> dan <b>fenol</b> yang berfungsi sebagai antibakteri alami, dikombinasikan dengan <b>minyak serai merah</b> sebagai aroma.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : RUMUSAN & TUJUAN ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">MATERI</span>
+      <div class="num">03</div>
+      <h2>Rumusan Masalah &amp; Tujuan Penelitian</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">❓</span>Rumusan Masalah</h3>
+        <ul>
+          <li>Efektivitas ekstrak daun sirih terhadap bakteri penyebab bau badan.</li>
+          <li>Perbandingan dengan deodoran komersial.</li>
+          <li>Manfaatnya bagi penderita bau badan.</li>
+        </ul></div>
+      <div class="card glass rv"><h3><span class="ic">🎯</span>Tujuan</h3>
+        <p>Memformulasikan ekstrak daun sirih (<i>Piper betle</i> L.) menjadi sediaan <b>deodoran berbentuk spray</b> dan menentukan <b>formulasi terbaik</b>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : BATASAN & MANFAAT ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">MATERI</span>
+      <div class="num">04</div>
+      <h2>Batasan Masalah &amp; Manfaat</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">📏</span>Batasan Masalah</h3>
+        <p>Pengujian efektivitas dan <b>ketahanan lama</b> ekstrak daun sirih dalam menguraikan/mencegah bau badan.</p></div>
+      <div class="card glass rv"><h3><span class="ic">💧</span>Manfaat</h3>
+        <ul>
+          <li>Membantu menyegarkan dan mengeringkan ketiak.</li>
+          <li>Memberikan edukasi mengenai khasiat bahan herbal alami.</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 : DAUN SIRIH ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">TINJAUAN PUSTAKA</span>
+      <div class="num">05</div>
+      <h2>Daun Sirih<br>(<i>Piper betle</i> L.)</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">🌱</span>Taksonomi</h3>
+        <table class="tax">
+          <tr><td>Kingdom</td><td>Plantae</td></tr>
+          <tr><td>Famili</td><td>Piperaceae</td></tr>
+          <tr><td>Spesies</td><td><i>Piper betle</i> L.</td></tr>
+        </table></div>
+      <div class="card glass rv"><h3><span class="ic">🧪</span>Kandungan</h3>
+        <div class="chips"><span class="chip">Minyak atsiri</span><span class="chip">Fenol</span><span class="chip">Chavicol</span><span class="chip">Eugenol</span><span class="chip">Flavonoid</span></div></div>
+      <div class="card glass rv"><h3><span class="ic">🛡️</span>Fungsi</h3>
+        <p>Merusak dinding sel bakteri sehingga <b>menghambat pertumbuhan <i>Staphylococcus aureus</i></b>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : BAU BADAN & DEODORAN ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">TINJAUAN PUSTAKA</span>
+      <div class="num">06</div>
+      <h2>Bau Badan &amp; Sediaan Deodoran</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">🦠</span>Bakteri Utama</h3>
+        <div class="chips"><span class="chip gold"><i>Staphylococcus</i></span><span class="chip gold"><i>Corynebacterium</i></span></div>
+        <p style="margin-top:12px">Berkembang pada lingkungan yang <b>lembap</b>.</p></div>
+      <div class="card glass rv"><h3><span class="ic">✨</span>Keunggulan Deodoran Spray</h3>
+        <ul>
+          <li><b>Lebih higienis</b> karena tanpa kontak langsung dengan kulit.</li>
+          <li><b>Lebih aman</b> dari kontaminasi.</li>
+          <li><b>Praktis</b> digunakan.</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : ALAT & BAHAN ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">METODE PENELITIAN</span>
+      <div class="num">07</div>
+      <h2>Alat &amp; Bahan</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi">
+      <div class="card glass rv"><h3><span class="ic">📍</span>Waktu &amp; Tempat</h3>
+        <p>Perumahan 2, Lampung Tengah (Tahun 2026).</p></div>
+      <div class="card glass rv"><h3><span class="ic">🧰</span>Alat</h3>
+        <div class="chips"><span class="chip">Baskom</span><span class="chip">Sendok</span><span class="chip">Gelas ukur</span><span class="chip">Penutup plastik</span><span class="chip">Karet</span></div></div>
+      <div class="card glass rv"><h3><span class="ic">🧴</span>Bahan</h3>
+        <div class="chips"><span class="chip gold">Daun sirih</span><span class="chip gold">Etanol 70%</span><span class="chip gold">Alkohol 70%</span><span class="chip gold">Gliserin</span><span class="chip gold">Propilen glikol</span><span class="chip gold">Minyak serai merah</span><span class="chip gold">Aquadest</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : PROSEDUR ============ -->
+<section class="slide">
+  <div class="wrap split">
+    <div class="materi glass rv">
+      <span class="eyebrow">METODE PENELITIAN</span>
+      <div class="num">08</div>
+      <h2>Prosedur Kerja</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="isi steps">
+      <div class="card glass step rv"><div class="badge">1</div><div>
+        <h3>Pembuatan Simplisia</h3>
+        <div class="flow"><span class="chip">Sortasi basah</span><span class="arrow">→</span><span class="chip">Pencucian</span><span class="arrow">→</span><span class="chip">Perajangan</span><span class="arrow">→</span><span class="chip">Pengeringan (10 hari)</span><span class="arrow">→</span><span class="chip">Blender &amp; ayak</span></div></div></div>
+      <div class="card glass step rv"><div class="badge">2</div><div>
+        <h3>Ekstraksi (Maserasi)</h3>
+        <div class="flow"><span class="chip gold">250 g serbuk + 1.250 ml etanol 70% (2 hari maserasi)</span><span class="arrow">→</span><span class="chip">Penyaringan</span><span class="arrow">→</span><span class="chip">Pemekatan dengan water bath</span></div></div></div>
+      <div class="card glass step rv"><div class="badge">3</div><div>
+        <h3>Formulasi Spray</h3>
+        <div class="flow"><span class="chip">Pencampuran propilen glikol, gliserin, ekstrak daun sirih, minyak serai merah</span><span class="arrow">→</span><span class="chip">Tambah alkohol 70% hingga tanda batas</span><span class="arrow">→</span><span class="chip gold">Botol spray</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav">
+  <button id="prev" title="Sebelumnya (←)">‹</button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count">01 / 08</span>
+  <button id="next" title="Berikutnya (→)">›</button>
+  <button id="full" title="Layar penuh (F)" style="font-size:.95rem">⛶</button>
+</nav>
+
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=[...deck.querySelectorAll('.slide')];
+  const fxs=['zoom','slide','flip','rise','iris','spin','slide'];
+  const dots=document.getElementById('dots'), count=document.getElementById('count');
+  const prog=document.getElementById('progress');
+  const prev=document.getElementById('prev'), next=document.getElementById('next');
+  let cur=0, mx=0;
+
+  slides.forEach((s,i)=>{
+    s.querySelectorAll('.rv').forEach((el,k)=>el.style.setProperty('--i',k));
+    const d=document.createElement('i'); d.onclick=()=>go(i); dots.appendChild(d);
+  });
+
+  /* ---- Pohon (parallax 3 lapis) ---- */
+  function seeded(n){let s=n;return()=>(s=(s*9301+49297)%233280)/233280}
+  function trees(id,n,wMin,wMax,hMin,hMax,seed){
+    const el=document.getElementById(id), r=seeded(seed);
+    for(let i=0;i<n;i++){
+      const t=document.createElement('div'); t.className='tree';
+      t.style.left=(r()*100)+'%';
+      t.style.width=(wMin+r()*(wMax-wMin))+'vw';
+      t.style.height=(hMin+r()*(hMax-hMin))+'%';
+      el.appendChild(t);
+    }
+  }
+  trees('lFar',16,1.6,3.2,70,100,7);
+  trees('lMid',9,2.6,4.6,80,100,21);
+  trees('lNear',5,5,8.5,90,110,33);
+
+  function parallax(){
+    const x=cur;
+    document.getElementById('lFar').style.transform=`translateX(${-x*14+mx*6}px)`;
+    document.getElementById('lMid').style.transform=`translateX(${-x*34+mx*14}px)`;
+    document.getElementById('lNear').style.transform=`translateX(${-x*70+mx*30}px)`;
+  }
+  addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*2;parallax()});
+
+  /* ---- Navigasi & transisi ---- */
+  function ui(){
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+    count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+    prog.style.width=((cur+1)/slides.length*100)+'%';
+    prev.disabled=cur===0; next.disabled=cur===slides.length-1;
+    parallax();
+  }
+  function go(n){
+    if(n<0||n>=slides.length||n===cur)return;
+    const old=slides[cur], nw=slides[n];
+    deck.style.setProperty('--dir',n>cur?1:-1);
+    deck.className='deck fx-'+fxs[n%fxs.length];
+    slides.forEach(s=>{if(s!==old&&s!==nw)s.classList.remove('leaving','active')});
+    old.classList.remove('active'); old.classList.add('leaving');
+    setTimeout(()=>{if(!old.classList.contains('active'))old.classList.remove('leaving')},850);
+    nw.classList.remove('leaving'); nw.scrollTop=0; nw.classList.add('active');
+    cur=n; ui();
+  }
+  deck.className='deck fx-zoom';
+  slides[0].classList.add('active'); ui();
+
+  prev.onclick=()=>go(cur-1); next.onclick=()=>go(cur+1);
+  document.getElementById('full').onclick=toggleFull;
+  function toggleFull(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(cur+1)}
+    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(cur-1)}
+    else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+    else if(e.key==='f'||e.key==='F')toggleFull();
+  });
+  let tx=0,ty=0;
+  addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+  addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)) go(dx<0?cur+1:cur-1);
+  },{passive:true});
+
+  /* ---- Kunang-kunang & daun berenergi (canvas) ---- */
+  const cv=document.getElementById('fx'), c=cv.getContext('2d');
+  let W,H,DPR=Math.min(devicePixelRatio||1,2);
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;c.setTransform(DPR,0,0,DPR,0,0)}
+  size(); addEventListener('resize',size);
+  const R=Math.random;
+  const flies=Array.from({length:70},()=>({x:R()*W,y:R()*H,r:1+R()*2.4,vx:(R()-.5)*.3,vy:(R()-.5)*.25,p:R()*6.3,gold:R()<.3}));
+  const leaves=Array.from({length:16},()=>({x:R()*W,y:R()*H-H,s:9+R()*14,vy:.25+R()*.55,sw:R()*6.3,rot:R()*6.3,vr:(R()-.5)*.02,p:R()*6.3}));
+  function leaf(l,t){
+    const s=l.s, glow=.45+.55*Math.sin(t*.002+l.p);
+    c.save(); c.translate(l.x,l.y); c.rotate(l.rot); c.scale(1,Math.cos(t*.001+l.sw)*.4+.8);
+    c.shadowColor='rgba(124,255,107,'+glow+')'; c.shadowBlur=14;
+    const g=c.createLinearGradient(0,-s,0,s); g.addColorStop(0,'#8dff7a'); g.addColorStop(1,'#1c7a3a');
+    c.fillStyle=g; c.globalAlpha=.85;
+    c.beginPath(); c.moveTo(0,-s); c.bezierCurveTo(s*.95,-s*.4,s*.7,s*.6,0,s); c.bezierCurveTo(-s*.7,s*.6,-s*.95,-s*.4,0,-s); c.fill();
+    c.strokeStyle='rgba(232,255,200,'+(.4+glow*.6)+')'; c.lineWidth=1; c.beginPath(); c.moveTo(0,-s); c.lineTo(0,s); c.stroke();
+    c.restore();
+  }
+  function frame(t){
+    c.clearRect(0,0,W,H);
+    for(const f of flies){
+      f.x+=f.vx+Math.sin(t*.0007+f.p)*.15; f.y+=f.vy+Math.cos(t*.0009+f.p)*.15;
+      if(f.x<-10)f.x=W+10; if(f.x>W+10)f.x=-10; if(f.y<-10)f.y=H+10; if(f.y>H+10)f.y=-10;
+      const a=.35+.65*Math.abs(Math.sin(t*.0015+f.p)), rr=f.r*7;
+      const g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,rr);
+      const col=f.gold?'255,225,120':'170,255,140';
+      g.addColorStop(0,`rgba(${col},${a})`); g.addColorStop(.25,`rgba(${col},${a*.35})`); g.addColorStop(1,`rgba(${col},0)`);
+      c.fillStyle=g; c.beginPath(); c.arc(f.x,f.y,rr,0,6.3); c.fill();
+    }
+    for(const l of leaves){
+      l.y+=l.vy; l.x+=Math.sin(t*.0008+l.sw)*.6; l.rot+=l.vr;
+      if(l.y>H+30){l.y=-30;l.x=R()*W}
+      leaf(l,t);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
