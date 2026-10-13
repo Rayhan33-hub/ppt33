@@ -3,519 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deodoran Herbal Daun Sirih</title>
+<meta name="theme-color" content="#04140a">
+<title>Pemanfaatan Ekstrak Daun Sirih sebagai Deodoran Herbal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --neon:#7cff6b; --lime:#c6ff8a; --gold:#f5d97a; --deep:#04140a;
-  --text:#eafbe7; --muted:#b5d8b0;
-}
+:root{--neon:#7cff6b;--lime:#c6ff8a;--gold:#f5d97a;--deep:#04140a;--text:#eafbe7;--muted:#b5d8b0}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--deep);color:var(--text);
-  font-family:'Poppins',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-
-/* ================= LATAR HUTAN ================= */
-.scene{position:fixed;inset:0;overflow:hidden;
-  background:radial-gradient(ellipse at 72% -5%,#4fa35a 0%,#237a42 22%,#0f4a2a 50%,#06220f 80%,#031008 100%)}
-.rays{position:absolute;inset:-30%;mix-blend-mode:screen;filter:blur(7px);opacity:.55;
-  background:
-   conic-gradient(from 195deg at 72% 0%,transparent 0 6deg,rgba(255,250,190,.28) 8deg,transparent 12deg,
-   transparent 16deg,rgba(255,250,190,.2) 19deg,transparent 22deg,
-   transparent 27deg,rgba(255,250,190,.25) 30deg,transparent 35deg,
-   transparent 40deg,rgba(255,250,190,.16) 43deg,transparent 47deg,transparent 360deg);
-  animation:rays 14s ease-in-out infinite alternate}
-@keyframes rays{from{transform:rotate(-3deg);opacity:.35}to{transform:rotate(3deg);opacity:.7}}
-.layer{position:absolute;left:-10%;right:-10%;top:0;bottom:0;transition:transform 1.3s cubic-bezier(.2,.7,.2,1)}
-.tree{position:absolute;bottom:-2%;border-radius:40% 40% 0 0/6% 6% 0 0;
-  background:
-   repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 2px,transparent 2px 7px),
-   linear-gradient(90deg,#010603 0%,#0c2112 30%,#234a2b 52%,#0a1c0f 75%,#010603 100%)}
-.tree::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.0) 0%,rgba(0,0,0,.0) 60%,rgba(0,0,0,.55) 100%)}
-.l-far{filter:blur(5px);opacity:.45}
-.l-mid{filter:blur(2px);opacity:.8}
-.l-near .tree{box-shadow:0 0 60px rgba(0,0,0,.7)}
-.canopy{position:absolute;left:-5%;right:-5%;top:-6%;height:34%;pointer-events:none;filter:blur(3px);
-  background:
-   radial-gradient(ellipse 18% 70% at 6% 20%,#031a0a 0 55%,transparent 72%),
-   radial-gradient(ellipse 22% 80% at 24% 5%,#052711 0 55%,transparent 72%),
-   radial-gradient(ellipse 20% 60% at 46% 0%,#04210e 0 55%,transparent 72%),
-   radial-gradient(ellipse 24% 85% at 66% -5%,#062a12 0 50%,transparent 72%),
-   radial-gradient(ellipse 18% 70% at 90% 10%,#031a0a 0 55%,transparent 72%)}
-.ground{position:absolute;left:0;right:0;bottom:0;height:26%;pointer-events:none;
-  background:
-   radial-gradient(ellipse 14% 60% at 8% 100%,#0e3a18 0 50%,transparent 75%),
-   radial-gradient(ellipse 16% 70% at 30% 105%,#14531f 0 50%,transparent 75%),
-   radial-gradient(ellipse 18% 60% at 55% 105%,#0b2f14 0 50%,transparent 75%),
-   radial-gradient(ellipse 15% 70% at 78% 105%,#17602a 0 50%,transparent 75%),
-   radial-gradient(ellipse 14% 60% at 98% 100%,#0e3a18 0 50%,transparent 75%),
-   linear-gradient(0deg,#020a05 0%,transparent 100%)}
-.mist{position:absolute;width:90%;height:40%;border-radius:50%;filter:blur(40px);opacity:.28;pointer-events:none;
-  background:radial-gradient(ellipse,rgba(210,255,220,.55),transparent 70%)}
-.m1{left:-20%;bottom:8%;animation:mist 26s linear infinite alternate}
-.m2{right:-25%;bottom:22%;animation:mist 34s linear infinite alternate-reverse}
-@keyframes mist{from{transform:translateX(-8%)}to{transform:translateX(14%)}}
-.vignette{position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,8,3,.78) 100%)}
-canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-
-/* ================= DECK & TRANSISI ================= */
-.deck{position:fixed;inset:0;--dir:1;--in:inZoom;--out:outZoom;perspective:1800px;z-index:5}
-.fx-zoom{--in:inZoom;--out:outZoom}
-.fx-slide{--in:inSlide;--out:outSlide}
-.fx-flip{--in:inFlip;--out:outFlip}
-.fx-rise{--in:inRise;--out:outRise}
-.fx-iris{--in:inIris;--out:outIris}
-.fx-spin{--in:inSpin;--out:outSpin}
-.slide{position:absolute;inset:0;display:none;padding:clamp(18px,4vw,52px) clamp(16px,5vw,84px) 96px;
-  overflow-y:auto;overflow-x:hidden;transform-style:preserve-3d;scrollbar-width:thin}
+html,body{margin:0;min-height:100%;background:var(--deep);color:var(--text);font-family:Poppins,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+.scene{position:fixed;inset:0;overflow:hidden;background:radial-gradient(ellipse at 72% -5%,#4fa35a 0%,#237a42 22%,#0f4a2a 50%,#06220f 80%,#031008 100%)}
+.rays{position:absolute;inset:-30%;mix-blend-mode:screen;filter:blur(7px);opacity:.5;background:conic-gradient(from 195deg at 72% 0%,transparent 0 6deg,rgba(255,250,190,.28) 8deg,transparent 12deg,transparent 16deg,rgba(255,250,190,.2) 19deg,transparent 22deg,transparent 27deg,rgba(255,250,190,.25) 30deg,transparent 35deg,transparent 40deg,rgba(255,250,190,.16) 43deg,transparent 47deg,transparent 360deg);animation:rays 14s ease-in-out infinite alternate}
+@keyframes rays{to{transform:rotate(4deg);opacity:.75}}
+.forest{position:absolute;inset:0;pointer-events:none}
+.trunk{position:absolute;bottom:-4%;border-radius:45% 45% 0 0;background:repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 2px,transparent 2px 7px),linear-gradient(90deg,#010603,#234a2b 52%,#010603);opacity:.65}
+.canopy{position:absolute;inset:-5% -5% auto;height:30%;background:radial-gradient(ellipse 20% 80% at 8% 10%,#031a0a 0 55%,transparent 72%),radial-gradient(ellipse 22% 80% at 28% 0%,#052711 0 55%,transparent 72%),radial-gradient(ellipse 20% 70% at 53% 0%,#04210e 0 55%,transparent 72%),radial-gradient(ellipse 24% 85% at 76% 0%,#062a12 0 50%,transparent 72%),radial-gradient(ellipse 18% 70% at 96% 10%,#031a0a 0 55%,transparent 72%)}
+.ground{position:absolute;inset:auto 0 0;height:24%;background:radial-gradient(ellipse at 20% 100%,#14531f,transparent 50%),radial-gradient(ellipse at 75% 100%,#17602a,transparent 50%),linear-gradient(0deg,#020a05,transparent)}
+.mist{position:absolute;width:90%;height:35%;border-radius:50%;filter:blur(40px);opacity:.22;background:radial-gradient(ellipse,rgba(210,255,220,.55),transparent 70%);animation:mist 24s ease-in-out infinite alternate}
+.mist.m1{left:-20%;bottom:8%}.mist.m2{right:-25%;bottom:22%;animation-delay:-9s}
+@keyframes mist{to{transform:translateX(18%)}}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 25%,rgba(0,8,3,.76) 100%)}
+#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.progress{position:fixed;left:0;top:0;height:4px;width:0;z-index:30;background:linear-gradient(90deg,#1f9d46,var(--neon),var(--gold));box-shadow:0 0 16px var(--neon);transition:width .5s}
+.deck{position:fixed;inset:0;perspective:1600px;z-index:5}
+.slide{position:absolute;inset:0;display:none;padding:clamp(18px,4vw,52px) clamp(16px,5vw,84px) 100px;overflow-y:auto;scrollbar-width:thin}
 .slide.active,.slide.leaving{display:flex}
-.slide.active{animation:var(--in) .95s cubic-bezier(.22,.8,.2,1) both;z-index:2}
-.slide.leaving{animation:var(--out) .8s cubic-bezier(.5,0,.8,.4) both;z-index:1;pointer-events:none}
+.slide.active{animation:enter .8s cubic-bezier(.22,.8,.2,1) both;z-index:2}
+.slide.leaving{animation:leave .45s ease both;z-index:1;pointer-events:none}
+@keyframes enter{from{opacity:0;transform:translateX(5%) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes leave{to{opacity:0;transform:translateX(-4%) scale(.98)}}
 .wrap{margin:auto;width:100%;max-width:1220px}
-@keyframes inZoom{from{opacity:0;transform:scale(.7);filter:blur(16px)}to{opacity:1;transform:none;filter:none}}
-@keyframes outZoom{to{opacity:0;transform:scale(1.35);filter:blur(16px)}}
-@keyframes inSlide{from{opacity:0;transform:translateX(calc(var(--dir)*75%))}to{opacity:1;transform:none}}
-@keyframes outSlide{to{opacity:0;transform:translateX(calc(var(--dir)*-75%))}}
-@keyframes inFlip{from{opacity:0;transform:rotateY(calc(var(--dir)*-85deg)) translateZ(-250px)}to{opacity:1;transform:none}}
-@keyframes outFlip{to{opacity:0;transform:rotateY(calc(var(--dir)*85deg)) translateZ(-250px)}}
-@keyframes inRise{from{opacity:0;transform:translateY(calc(var(--dir)*65%))}to{opacity:1;transform:none}}
-@keyframes outRise{to{opacity:0;transform:translateY(calc(var(--dir)*-65%))}}
-@keyframes inIris{from{clip-path:circle(0% at 50% 50%)}to{clip-path:circle(150% at 50% 50%)}}
-@keyframes outIris{to{opacity:0;transform:scale(.93)}}
-@keyframes inSpin{from{opacity:0;transform:translateX(calc(var(--dir)*30%)) rotate(calc(var(--dir)*9deg)) scale(.82);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
-@keyframes outSpin{to{opacity:0;transform:translateX(calc(var(--dir)*-30%)) rotate(calc(var(--dir)*-9deg)) scale(.82);filter:blur(10px)}}
-.rv{opacity:0}
-.slide.active .rv{animation:rv .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*.12s + .5s)}
-@keyframes rv{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
-
-/* ================= KOMPONEN ================= */
-.glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.04));
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(180,255,170,.26);border-radius:22px;
-  box-shadow:0 22px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.28),0 0 30px rgba(124,255,107,.06)}
-.split{display:grid;grid-template-columns:minmax(250px,33%) 1fr;gap:clamp(18px,3vw,44px);align-items:stretch}
-.materi{position:relative;padding:clamp(22px,3vw,40px);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
-.materi::before{content:"";position:absolute;right:-40px;bottom:-40px;width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,255,107,.35),transparent 70%);animation:pulse 4s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.35);opacity:.6}}
-.eyebrow{font-size:.78rem;letter-spacing:.35em;color:var(--lime);font-weight:600}
-.num{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(4.5rem,10vw,8rem);line-height:1;margin:.1em 0;
-  background:linear-gradient(180deg,#e8ffc8,#7cff6b 55%,#1f9d46);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 0 18px rgba(124,255,107,.55))}
-.materi h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.6vw,2.2rem);margin:0 0 .6em;line-height:1.2}
-.bar{height:3px;width:90px;border-radius:3px;background:linear-gradient(90deg,var(--neon),transparent);box-shadow:0 0 14px var(--neon)}
-.isi{display:flex;flex-direction:column;gap:clamp(12px,1.6vw,20px);justify-content:center}
-.card{padding:clamp(16px,2vw,26px)}
-.card h3{margin:0 0 .5em;font-size:1.02rem;color:var(--gold);letter-spacing:.04em;display:flex;align-items:center;gap:.6em}
-.card h3 .ic{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;font-size:1rem;
-  background:radial-gradient(circle,rgba(124,255,107,.35),rgba(124,255,107,.08));border:1px solid rgba(124,255,107,.5);
-  box-shadow:0 0 14px rgba(124,255,107,.4)}
-.card p,.card li{margin:0;color:#dff3da;line-height:1.7;font-size:clamp(.92rem,1.25vw,1.05rem);font-weight:300}
-.card ul{margin:0;padding-left:1.2em}
-.card li+li{margin-top:.4em}
-.card b{color:var(--lime);font-weight:600}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.6vw,20px)}
+.rv{opacity:0}.slide.active .rv{animation:reveal .7s both;animation-delay:calc(var(--i,0)*.08s + .2s)}
+@keyframes reveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));backdrop-filter:blur(14px);border:1px solid rgba(180,255,170,.26);border-radius:22px;box-shadow:0 22px 50px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.22)}
+.split{display:grid;grid-template-columns:minmax(220px,32%) 1fr;gap:clamp(16px,3vw,38px);align-items:stretch}
+.materi{position:relative;padding:clamp(20px,3vw,38px);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.materi:after{content:"";position:absolute;right:-45px;bottom:-45px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(124,255,107,.3),transparent 70%);animation:pulse 4s infinite}
+@keyframes pulse{50%{transform:scale(1.3);opacity:.55}}
+.eyebrow{font-size:.75rem;letter-spacing:.25em;color:var(--lime);font-weight:600}
+.num{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(3.8rem,8vw,7rem);line-height:1;margin:.12em 0;background:linear-gradient(#e8ffc8,#7cff6b 60%,#1f9d46);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 15px #7cff6b55)}
+h1,h2{font-family:'Playfair Display',serif}
+.materi h2{font-size:clamp(1.45rem,2.4vw,2.1rem);line-height:1.2;margin:0 0 .6em}
+.bar{height:3px;width:90px;background:linear-gradient(90deg,var(--neon),transparent)}
+.isi{display:flex;flex-direction:column;gap:14px;justify-content:center;min-width:0}
+.card{padding:clamp(15px,2vw,24px)}
+.card h3{margin:0 0 .55em;font-size:1rem;color:var(--gold);letter-spacing:.02em;display:flex;align-items:center;gap:.6em}
+.ic{display:inline-grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#7cff6b20;border:1px solid #7cff6b70}
+.card p,.card li{margin:0;color:#dff3da;line-height:1.7;font-size:clamp(.88rem,1.15vw,1rem);font-weight:300}
+.card p+p{margin-top:.6em}.card ul{margin:0;padding-left:1.2em}.card li+li{margin-top:.35em}.card b{color:var(--lime);font-weight:600}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:6px 14px;border-radius:999px;font-size:.88rem;background:rgba(124,255,107,.12);
-  border:1px solid rgba(124,255,107,.4);color:#e6ffe0;box-shadow:0 0 12px rgba(124,255,107,.15)}
-.chip.gold{background:rgba(245,217,122,.12);border-color:rgba(245,217,122,.5)}
-.arrow{color:var(--neon);font-weight:600;align-self:center;text-shadow:0 0 8px var(--neon)}
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-table.tax{width:100%;border-collapse:collapse;font-size:.95rem}
-table.tax td{padding:7px 4px;border-bottom:1px dashed rgba(180,255,170,.22);font-weight:300}
-table.tax td:first-child{color:var(--gold);width:38%;font-weight:500}
-.steps{display:grid;gap:clamp(12px,1.6vw,18px)}
-.step{display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:start}
-.badge{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:1.3rem;color:#032;
-  background:radial-gradient(circle at 35% 30%,#e8ffc8,#7cff6b 60%,#1f9d46);box-shadow:0 0 22px rgba(124,255,107,.7)}
-.step h3{margin:.1em 0 .4em}
-
-/* ================= COVER ================= */
-.cover{display:grid;grid-template-columns:1.25fr 1fr;gap:30px;align-items:center}
-.tag{display:inline-block;padding:7px 18px;border-radius:999px;letter-spacing:.3em;font-size:.72rem;color:var(--lime);
-  border:1px solid rgba(124,255,107,.5);background:rgba(124,255,107,.08)}
-.cover h1{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.9rem,4.6vw,3.7rem);line-height:1.12;margin:.5em 0 .4em;
-  background:linear-gradient(120deg,#fff 0%,#d9ffb5 35%,#7cff6b 70%,#f5d97a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 4px 18px rgba(0,0,0,.5))}
-.cover .sub{font-size:clamp(.95rem,1.6vw,1.2rem);color:#d6efd1;font-weight:300;line-height:1.7;max-width:640px}
-.cover .sub i{color:var(--lime)}
-.author{margin-top:1.8em;padding:14px 22px;display:inline-flex;gap:14px;align-items:center}
-.author .dot{width:12px;height:12px;border-radius:50%;background:var(--neon);box-shadow:0 0 14px var(--neon);animation:pulse 2.4s infinite}
-.author small{display:block;color:var(--muted);letter-spacing:.2em;font-size:.68rem}
-.author strong{font-weight:500;font-size:1.02rem}
-.energy{position:relative;display:grid;place-items:center;aspect-ratio:1}
-.energy svg{width:min(100%,430px);overflow:visible;animation:float 6s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-14px) rotate(2deg)}}
-.ring{position:absolute;border-radius:50%;border:1px solid rgba(124,255,107,.5);width:60%;aspect-ratio:1;animation:ring 4s ease-out infinite}
-.ring:nth-child(2){animation-delay:1.3s}.ring:nth-child(3){animation-delay:2.6s}
-@keyframes ring{from{transform:scale(.6);opacity:.9}to{transform:scale(1.6);opacity:0}}
-.vein{stroke-dasharray:14 10;animation:flow 2.2s linear infinite}
-@keyframes flow{to{stroke-dashoffset:-48}}
-.core{animation:pulse 2.6s ease-in-out infinite;transform-origin:120px 140px}
-
-/* ================= NAVIGASI ================= */
-.progress{position:fixed;left:0;top:0;height:4px;width:0;z-index:30;transition:width .8s cubic-bezier(.2,.8,.2,1);
-  background:linear-gradient(90deg,#1f9d46,var(--neon),var(--gold));box-shadow:0 0 16px var(--neon)}
-.nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:14px;
-  padding:8px 14px;border-radius:999px;background:rgba(3,20,9,.65);backdrop-filter:blur(12px);
-  border:1px solid rgba(124,255,107,.3);box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.nav button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;
-  color:#dfffd6;background:rgba(124,255,107,.12);border:1px solid rgba(124,255,107,.4);transition:.25s}
-.nav button:hover{background:var(--neon);color:#031;box-shadow:0 0 18px var(--neon);transform:scale(1.1)}
-.nav button:disabled{opacity:.3;pointer-events:none}
-.dots{display:flex;gap:7px}
-.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.35s}
-.dots i.on{width:26px;border-radius:6px;background:var(--neon);box-shadow:0 0 12px var(--neon)}
-.count{font-size:.8rem;color:var(--muted);min-width:56px;text-align:center;letter-spacing:.1em}
-
-@media(max-width:860px){
-  .split,.cover,.cols{grid-template-columns:1fr}
-  .materi{padding:18px 22px}
-  .num{font-size:4rem}
-  .energy{max-width:280px;margin:0 auto;order:-1}
-  .dots{display:none}
-}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+.chip{padding:6px 12px;border-radius:999px;font-size:.82rem;background:#7cff6b1c;border:1px solid #7cff6b66;color:#e6ffe0}
+.chip.gold{background:#f5d97a1c;border-color:#f5d97a77}
+.cover{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}
+.tag{display:inline-block;padding:7px 16px;border-radius:999px;letter-spacing:.22em;font-size:.7rem;color:var(--lime);border:1px solid #7cff6b80;background:#7cff6b14}
+.cover h1{font-weight:800;font-size:clamp(1.8rem,4.2vw,3.5rem);line-height:1.1;margin:.5em 0;background:linear-gradient(120deg,#fff,#d9ffb5 40%,#7cff6b 75%,#f5d97a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(.92rem,1.4vw,1.13rem);color:#d6efd1;line-height:1.7;font-weight:300}
+.author{margin-top:1.4em;padding:13px 18px;display:inline-flex;gap:12px;align-items:center}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--neon);box-shadow:0 0 14px var(--neon)}
+.author small{display:block;color:var(--muted);letter-spacing:.15em;font-size:.65rem}.author strong{font-size:.95rem;font-weight:500}
+.hero-photo{position:relative;padding:12px;border-radius:28px;transform:rotate(2deg);box-shadow:0 0 45px #7cff6b30}
+.hero-photo img{display:block;width:100%;height:min(52vh,430px);object-fit:cover;border-radius:20px;border:1px solid #caffa066}
+.photo-caption{text-align:center;color:var(--lime);font-size:.75rem;margin-top:9px;letter-spacing:.08em}
+.photo-card{display:grid;grid-template-columns:minmax(130px,36%) 1fr;gap:18px;align-items:center}
+.photo-card img{width:100%;height:170px;object-fit:cover;border-radius:15px;border:1px solid #7cff6b70}
+.tax{width:100%;border-collapse:collapse;font-size:.92rem}.tax td{padding:7px 4px;border-bottom:1px dashed #b4ffaa35}.tax td:first-child{color:var(--gold);width:34%;font-weight:500}
+.steps{display:grid;gap:12px}.step{display:grid;grid-template-columns:46px 1fr;gap:13px;align-items:start}
+.badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#032;background:radial-gradient(circle at 35% 30%,#e8ffc8,#7cff6b 60%,#1f9d46);font-weight:700;box-shadow:0 0 18px #7cff6b77}
+.step h3{margin:.1em 0 .45em;color:var(--gold);font-size:1rem}
+.flow{display:flex;flex-wrap:wrap;gap:7px;align-items:center}.arrow{color:var(--neon);font-weight:700}
+.nav{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:12px;padding:7px 12px;border-radius:999px;background:#031409b8;backdrop-filter:blur(12px);border:1px solid #7cff6b55;box-shadow:0 10px 30px #0008}
+.nav button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;color:#dfffd6;background:#7cff6b1c;border:1px solid #7cff6b66;transition:.2s}
+.nav button:hover{background:var(--neon);color:#031;transform:scale(1.08)}.nav button:disabled{opacity:.28;pointer-events:none}
+.dots{display:flex;gap:6px;max-width:35vw;overflow:hidden}.dots i{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#ffffff40;cursor:pointer}.dots i.on{width:21px;flex-basis:21px;border-radius:5px;background:var(--neon);box-shadow:0 0 10px var(--neon)}
+.count{font-size:.75rem;color:var(--muted);min-width:58px;text-align:center}
+.thanks{text-align:center;max-width:900px;margin:auto}.thanks h1{font-size:clamp(3rem,8vw,6.5rem);line-height:1;margin:.2em 0;color:var(--lime);text-shadow:0 0 30px #7cff6b77}.thanks h2{font-family:Poppins,sans-serif;font-size:clamp(1.4rem,3vw,2.3rem);letter-spacing:.18em;color:var(--gold);margin:0}
+.thanks img{width:min(45vw,290px);height:min(35vh,230px);object-fit:cover;border-radius:50%;border:2px solid #c6ff8a88;box-shadow:0 0 45px #7cff6b44;margin:20px auto}
+@media(max-width:850px){.split,.cover,.cols{grid-template-columns:1fr}.materi{padding:17px 20px}.num{font-size:3.6rem}.cover{gap:16px}.hero-photo{max-width:250px;margin:0 auto}.hero-photo img{height:200px}.photo-card{grid-template-columns:1fr}.photo-card img{height:180px}.slide{padding-bottom:90px}.dots{display:none}.isi{gap:10px}}
+@media(max-height:700px){.slide{padding-top:16px;padding-bottom:80px}.card{padding:13px}.isi{gap:9px}.hero-photo img{height:230px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-
-<div class="scene" id="scene">
-  <div class="rays"></div>
-  <div class="layer l-far" id="lFar"></div>
-  <div class="layer l-mid" id="lMid"></div>
-  <div class="canopy"></div>
-  <div class="mist m1"></div>
-  <div class="layer l-near" id="lNear"></div>
-  <div class="ground"></div>
-  <div class="mist m2"></div>
-  <canvas id="fx"></canvas>
-  <div class="vignette"></div>
+<div class="scene" aria-hidden="true">
+  <div class="rays"></div><div class="forest" id="forest"></div><div class="canopy"></div>
+  <div class="mist m1"></div><div class="mist m2"></div><div class="ground"></div>
+  <canvas id="fx"></canvas><div class="vignette"></div>
 </div>
-
 <div class="progress" id="progress"></div>
-
 <main class="deck" id="deck">
 
-<!-- ============ SLIDE 1 : JUDUL ============ -->
-<section class="slide">
-  <div class="wrap cover">
-    <div>
-      <span class="tag rv">PROYEK PENELITIAN</span>
-      <h1 class="rv">PEMANFAATAN EKSTRAK DAUN SIRIH SEBAGAI BAHAN DALAM PRODUK DEODORANT HERBAL</h1>
-      <p class="sub rv">Formulasi Deodoran Spray Ekstrak Daun Sirih (<i>Piper betle</i> L.) dengan Kombinasi Minyak Serai Merah (<i>Cymbopogon nardus</i> L.)</p>
-      <div class="author glass rv">
-        <span class="dot"></span>
-        <div><small>PENYUSUN</small><strong>Muhammad Rayhan Rizky Pratama</strong><br><small style="margin-top:2px">SMA GUNUNG MADU</small></div>
-      </div>
-    </div>
-    <div class="energy rv">
-      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
-      <svg viewBox="0 0 240 270" aria-label="Daun sirih berenergi">
-        <defs>
-          <radialGradient id="lf" cx="50%" cy="40%" r="70%">
-            <stop offset="0" stop-color="#8dff7a"/><stop offset=".55" stop-color="#2fae4f"/><stop offset="1" stop-color="#0d4a22"/>
-          </radialGradient>
-          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <circle class="core" cx="120" cy="140" r="90" fill="rgba(124,255,107,.18)" filter="url(#glow)"/>
-        <path d="M120 14 C70 50 8 88 26 158 C38 205 88 236 120 250 C152 236 202 205 214 158 C232 88 170 50 120 14Z"
-              fill="url(#lf)" stroke="#caffa0" stroke-width="2" filter="url(#glow)"/>
-        <g fill="none" stroke="#e8ffc8" stroke-linecap="round" filter="url(#glow)">
-          <path class="vein" stroke-width="3" d="M120 258 L120 30"/>
-          <path class="vein" stroke-width="2" d="M120 95 Q86 100 48 128"/>
-          <path class="vein" stroke-width="2" d="M120 95 Q154 100 192 128"/>
-          <path class="vein" stroke-width="2" d="M120 140 Q82 148 40 176"/>
-          <path class="vein" stroke-width="2" d="M120 140 Q158 148 200 176"/>
-          <path class="vein" stroke-width="2" d="M120 188 Q92 196 66 214"/>
-          <path class="vein" stroke-width="2" d="M120 188 Q148 196 174 214"/>
-        </g>
-      </svg>
-    </div>
+<section class="slide"><div class="wrap cover">
+  <div>
+    <span class="tag rv">PROYEK PENELITIAN · 2026</span>
+    <h1 class="rv">PEMANFAATAN EKSTRAK DAUN SIRIH SEBAGAI BAHAN DEODORAN HERBAL</h1>
+    <p class="sub rv">Formulasi deodoran spray berbahan tunggal ekstrak daun sirih (<i>Piper betle</i> L.)</p>
+    <div class="author glass rv"><span class="dot"></span><div><small>PENYUSUN</small><strong>Muhammad Rayhan Rizky Pratama</strong><small>SMA GUNUNG MADU</small></div></div>
   </div>
-</section>
+  <div class="hero-photo glass rv"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Piper_betle.jpg?width=900" alt="Foto daun sirih Piper betle" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Betel_leaf.jpg?width=900'"><div class="photo-caption">DAUN SIRIH · <i>PIPER BETLE</i> L.</div></div>
+</div></section>
 
-<!-- ============ SLIDE 2 : LATAR BELAKANG ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">MATERI</span>
-      <div class="num">02</div>
-      <h2>Latar Belakang</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">🦠</span>Penyebab Bau Badan</h3>
-        <p>Bau badan berasal dari penguraian keringat oleh <b>bakteri kulit</b> di area kelenjar apokrin (ketiak).</p></div>
-      <div class="card glass rv"><h3><span class="ic">⚠️</span>Deodoran Komersial</h3>
-        <p>Umumnya mengandung zat kimia sintetik seperti <b>paraben</b> dan <b>aluminium salts</b> yang berisiko bagi kesehatan.</p></div>
-      <div class="card glass rv"><h3><span class="ic">🌿</span>Solusi Alami</h3>
-        <p>Daun sirih mengandung <b>flavonoid</b> dan <b>fenol</b> yang berfungsi sebagai antibakteri alami, dikombinasikan dengan <b>minyak serai merah</b> sebagai aroma.</p></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENDAHULUAN</span><div class="num">02</div><h2>Latar Belakang</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🦠</span>Masalah Bau Badan</h3><p>Bau badan dapat muncul ketika mikroorganisme kulit menguraikan komponen keringat, terutama di area tubuh yang hangat dan lembap seperti ketiak.</p></div>
+<div class="card glass rv"><h3><span class="ic">🌿</span>Potensi Daun Sirih</h3><p>Daun sirih (<b><i>Piper betle</i> L.</b>) merupakan tanaman yang secara tradisional digunakan dan mengandung senyawa seperti fenol serta minyak atsiri.</p></div>
+<div class="card glass rv"><h3><span class="ic">🎯</span>Gagasan Penelitian</h3><p>Ekstrak daun sirih diteliti sebagai bahan utama deodoran herbal. Kemampuan dan keamanan produk tetap perlu dibuktikan melalui pengujian.</p></div>
+</div></div></section>
 
-<!-- ============ SLIDE 3 : RUMUSAN & TUJUAN ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">MATERI</span>
-      <div class="num">03</div>
-      <h2>Rumusan Masalah &amp; Tujuan Penelitian</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">❓</span>Rumusan Masalah</h3>
-        <ul>
-          <li>Efektivitas ekstrak daun sirih terhadap bakteri penyebab bau badan.</li>
-          <li>Perbandingan dengan deodoran komersial.</li>
-          <li>Manfaatnya bagi penderita bau badan.</li>
-        </ul></div>
-      <div class="card glass rv"><h3><span class="ic">🎯</span>Tujuan</h3>
-        <p>Memformulasikan ekstrak daun sirih (<i>Piper betle</i> L.) menjadi sediaan <b>deodoran berbentuk spray</b> dan menentukan <b>formulasi terbaik</b>.</p></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENDAHULUAN</span><div class="num">03</div><h2>Identifikasi Masalah</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">❓</span>Permasalahan Utama</h3><ul><li>Bau badan dapat mengganggu kenyamanan dan kepercayaan diri.</li><li>Produk berbahan tumbuhan perlu diformulasikan secara tepat agar nyaman digunakan.</li><li>Efektivitas ekstrak daun sirih dalam sediaan spray perlu diuji, bukan hanya diasumsikan.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">🔎</span>Fokus Kajian</h3><p>Penelitian berfokus pada pemanfaatan <b>ekstrak daun sirih sebagai satu-satunya bahan aktif herbal</b>, tanpa tambahan minyak serai merah.</p></div>
+</div></div></section>
 
-<!-- ============ SLIDE 4 : BATASAN & MANFAAT ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">MATERI</span>
-      <div class="num">04</div>
-      <h2>Batasan Masalah &amp; Manfaat</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">📏</span>Batasan Masalah</h3>
-        <p>Pengujian efektivitas dan <b>ketahanan lama</b> ekstrak daun sirih dalam menguraikan/mencegah bau badan.</p></div>
-      <div class="card glass rv"><h3><span class="ic">💧</span>Manfaat</h3>
-        <ul>
-          <li>Membantu menyegarkan dan mengeringkan ketiak.</li>
-          <li>Memberikan edukasi mengenai khasiat bahan herbal alami.</li>
-        </ul></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENDAHULUAN</span><div class="num">04</div><h2>Rumusan Masalah</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">1</span>Rumusan Pertama</h3><p>Bagaimana proses pembuatan ekstrak daun sirih (<i>Piper betle</i> L.) yang dapat digunakan sebagai bahan dalam sediaan deodoran spray?</p></div>
+<div class="card glass rv"><h3><span class="ic">2</span>Rumusan Kedua</h3><p>Bagaimana karakteristik sediaan spray ekstrak daun sirih, misalnya warna, aroma, homogenitas, dan kemudahan penyemprotan?</p></div>
+<div class="card glass rv"><h3><span class="ic">3</span>Rumusan Ketiga</h3><p>Bagaimana merancang pengujian awal untuk mengetahui potensi dan kestabilan sediaan tersebut?</p></div>
+</div></div></section>
 
-<!-- ============ SLIDE 5 : DAUN SIRIH ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">TINJAUAN PUSTAKA</span>
-      <div class="num">05</div>
-      <h2>Daun Sirih<br>(<i>Piper betle</i> L.)</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">🌱</span>Taksonomi</h3>
-        <table class="tax">
-          <tr><td>Kingdom</td><td>Plantae</td></tr>
-          <tr><td>Famili</td><td>Piperaceae</td></tr>
-          <tr><td>Spesies</td><td><i>Piper betle</i> L.</td></tr>
-        </table></div>
-      <div class="card glass rv"><h3><span class="ic">🧪</span>Kandungan</h3>
-        <div class="chips"><span class="chip">Minyak atsiri</span><span class="chip">Fenol</span><span class="chip">Chavicol</span><span class="chip">Eugenol</span><span class="chip">Flavonoid</span></div></div>
-      <div class="card glass rv"><h3><span class="ic">🛡️</span>Fungsi</h3>
-        <p>Merusak dinding sel bakteri sehingga <b>menghambat pertumbuhan <i>Staphylococcus aureus</i></b>.</p></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENDAHULUAN</span><div class="num">05</div><h2>Tujuan Penelitian</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🎯</span>Tujuan Umum</h3><p>Mempelajari pemanfaatan ekstrak daun sirih (<b><i>Piper betle</i> L.</b>) sebagai bahan aktif herbal dalam formulasi deodoran spray.</p></div>
+<div class="card glass rv"><h3><span class="ic">📌</span>Tujuan Khusus</h3><ul><li>Menjelaskan tahapan persiapan bahan dan ekstraksi daun sirih.</li><li>Menyusun rancangan formulasi spray sederhana.</li><li>Mengamati karakteristik fisik sediaan.</li><li>Merumuskan pengujian lanjutan untuk menilai efektivitas dan kestabilan.</li></ul></div>
+</div></div></section>
 
-<!-- ============ SLIDE 6 : BAU BADAN & DEODORAN ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">TINJAUAN PUSTAKA</span>
-      <div class="num">06</div>
-      <h2>Bau Badan &amp; Sediaan Deodoran</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">🦠</span>Bakteri Utama</h3>
-        <div class="chips"><span class="chip gold"><i>Staphylococcus</i></span><span class="chip gold"><i>Corynebacterium</i></span></div>
-        <p style="margin-top:12px">Berkembang pada lingkungan yang <b>lembap</b>.</p></div>
-      <div class="card glass rv"><h3><span class="ic">✨</span>Keunggulan Deodoran Spray</h3>
-        <ul>
-          <li><b>Lebih higienis</b> karena tanpa kontak langsung dengan kulit.</li>
-          <li><b>Lebih aman</b> dari kontaminasi.</li>
-          <li><b>Praktis</b> digunakan.</li>
-        </ul></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENDAHULUAN</span><div class="num">06</div><h2>Batasan Masalah & Manfaat</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">📏</span>Batasan Masalah</h3><ul><li>Bahan aktif herbal yang dikaji hanya daun sirih.</li><li>Nama ilmiah yang digunakan adalah <i>Piper betle</i> L.</li><li>Penelitian mencakup persiapan simplisia, ekstraksi, rancangan formulasi, dan pengamatan awal.</li><li>Efektivitas terhadap bau badan tidak dinyatakan terbukti sebelum diuji.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">🌱</span>Manfaat</h3><p>Menambah pengetahuan tentang pemanfaatan tanaman lokal serta memberikan dasar untuk penelitian deodoran herbal yang lebih terukur.</p></div>
+</div></div></section>
 
-<!-- ============ SLIDE 7 : ALAT & BAHAN ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">METODE PENELITIAN</span>
-      <div class="num">07</div>
-      <h2>Alat &amp; Bahan</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi">
-      <div class="card glass rv"><h3><span class="ic">📍</span>Waktu &amp; Tempat</h3>
-        <p>Perumahan 2, Lampung Tengah (Tahun 2026).</p></div>
-      <div class="card glass rv"><h3><span class="ic">🧰</span>Alat</h3>
-        <div class="chips"><span class="chip">Baskom</span><span class="chip">Sendok</span><span class="chip">Gelas ukur</span><span class="chip">Penutup plastik</span><span class="chip">Karet</span></div></div>
-      <div class="card glass rv"><h3><span class="ic">🧴</span>Bahan</h3>
-        <div class="chips"><span class="chip gold">Daun sirih</span><span class="chip gold">Etanol 70%</span><span class="chip gold">Alkohol 70%</span><span class="chip gold">Gliserin</span><span class="chip gold">Propilen glikol</span><span class="chip gold">Minyak serai merah</span><span class="chip gold">Aquadest</span></div></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">07</div><h2>Mengenal Daun Sirih</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass photo-card rv"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Piper_betle.jpg?width=700" alt="Daun sirih segar" loading="lazy" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Betel_leaf.jpg?width=700'"><div><h3><span class="ic">🍃</span>Ciri Umum</h3><p>Daun sirih merupakan daun tunggal yang umumnya berbentuk menyerupai jantung, memiliki ujung meruncing, dan permukaan berwarna hijau.</p><p>Identifikasi tanaman perlu dilakukan dengan cermat sebelum bahan digunakan.</p></div></div>
+<div class="card glass rv"><h3><span class="ic">📚</span>Nama Ilmiah</h3><p><b><i>Piper betle</i> L.</b> adalah penulisan nama ilmiah yang benar. Kata “betle” bukan “Battle”.</p></div>
+</div></div></section>
 
-<!-- ============ SLIDE 8 : PROSEDUR ============ -->
-<section class="slide">
-  <div class="wrap split">
-    <div class="materi glass rv">
-      <span class="eyebrow">METODE PENELITIAN</span>
-      <div class="num">08</div>
-      <h2>Prosedur Kerja</h2>
-      <div class="bar"></div>
-    </div>
-    <div class="isi steps">
-      <div class="card glass step rv"><div class="badge">1</div><div>
-        <h3>Pembuatan Simplisia</h3>
-        <div class="flow"><span class="chip">Sortasi basah</span><span class="arrow">→</span><span class="chip">Pencucian</span><span class="arrow">→</span><span class="chip">Perajangan</span><span class="arrow">→</span><span class="chip">Pengeringan (10 hari)</span><span class="arrow">→</span><span class="chip">Blender &amp; ayak</span></div></div></div>
-      <div class="card glass step rv"><div class="badge">2</div><div>
-        <h3>Ekstraksi (Maserasi)</h3>
-        <div class="flow"><span class="chip gold">250 g serbuk + 1.250 ml etanol 70% (2 hari maserasi)</span><span class="arrow">→</span><span class="chip">Penyaringan</span><span class="arrow">→</span><span class="chip">Pemekatan dengan water bath</span></div></div></div>
-      <div class="card glass step rv"><div class="badge">3</div><div>
-        <h3>Formulasi Spray</h3>
-        <div class="flow"><span class="chip">Pencampuran propilen glikol, gliserin, ekstrak daun sirih, minyak serai merah</span><span class="arrow">→</span><span class="chip">Tambah alkohol 70% hingga tanda batas</span><span class="arrow">→</span><span class="chip gold">Botol spray</span></div></div></div>
-    </div>
-  </div>
-</section>
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">08</div><h2>Taksonomi Daun Sirih</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🌿</span>Klasifikasi</h3><table class="tax"><tr><td>Kingdom</td><td>Plantae</td></tr><tr><td>Kelompok</td><td>Angiospermae (tumbuhan berbunga)</td></tr><tr><td>Ordo</td><td>Piperales</td></tr><tr><td>Famili</td><td>Piperaceae</td></tr><tr><td>Genus</td><td><i>Piper</i></td></tr><tr><td>Spesies</td><td><i>Piper betle</i> L.</td></tr></table></div>
+<div class="card glass rv"><h3><span class="ic">🔬</span>Catatan Identifikasi</h3><p>Klasifikasi dapat ditulis lebih rinci berdasarkan rujukan botani yang digunakan. Pastikan foto dan sampel penelitian benar-benar berasal dari tanaman sirih.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">09</div><h2>Kandungan Kimia</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🧪</span>Senyawa yang Dilaporkan</h3><div class="chips"><span class="chip">Fenol</span><span class="chip">Minyak atsiri</span><span class="chip">Eugenol</span><span class="chip">Chavicol</span><span class="chip">Flavonoid</span><span class="chip">Tanin</span></div><p style="margin-top:12px">Komposisi senyawa dapat berbeda menurut varietas, umur daun, lokasi tumbuh, dan metode ekstraksi.</p></div>
+<div class="card glass rv"><h3><span class="ic">⚗️</span>Peran dalam Penelitian</h3><p>Senyawa tersebut menjadi alasan ilmiah untuk meneliti potensi daun sirih. Keberadaan dan kadarnya dalam ekstrak tertentu tidak boleh dianggap pasti tanpa analisis.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">10</div><h2>Potensi Antimikroba</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🛡️</span>Dasar Teori</h3><p>Sejumlah senyawa tumbuhan, termasuk senyawa fenolik, dapat menunjukkan aktivitas antimikroba dalam kondisi uji tertentu. Mekanismenya dapat melibatkan gangguan pada struktur atau fungsi sel mikroba.</p></div>
+<div class="card glass rv"><h3><span class="ic">🧫</span>Perlu Pembuktian</h3><p>Potensi dari pustaka bukan bukti bahwa formulasi akhir pasti efektif. Pengujian perlu memakai metode yang sesuai, kontrol, replikasi, dan prosedur keselamatan laboratorium.</p></div>
+<div class="card glass rv"><h3><span class="ic">📍</span>Organisme Uji</h3><p><i>Staphylococcus aureus</i> dapat menjadi salah satu organisme kajian di laboratorium yang berwenang. Penanganan kultur mikroba harus mengikuti arahan guru atau tenaga laboratorium.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">11</div><h2>Bau Badan & Mikroorganisme</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">💧</span>Bagaimana Bau Terbentuk?</h3><p>Keringat tidak selalu berbau kuat saat dikeluarkan. Bau dapat muncul saat mikroorganisme kulit menguraikan komponen keringat dan menghasilkan senyawa beraroma.</p></div>
+<div class="card glass rv"><h3><span class="ic">🦠</span>Area yang Mendukung</h3><p>Ketiak merupakan area hangat dan lembap yang dapat mendukung aktivitas mikroorganisme. Kebersihan, pakaian, aktivitas, dan kondisi individu juga memengaruhi bau badan.</p></div>
+<div class="card glass rv"><h3><span class="ic">🧼</span>Pendekatan Pencegahan</h3><p>Menjaga kebersihan, mengeringkan kulit, dan mengganti pakaian setelah berkeringat merupakan langkah dasar. Deodoran dapat membantu mengendalikan bau, tetapi bukan pengganti kebersihan.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">TINJAUAN PUSTAKA</span><div class="num">12</div><h2>Pengertian Deodoran Spray</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🧴</span>Definisi</h3><p>Deodoran adalah produk yang ditujukan untuk membantu mengurangi atau menutupi bau badan. Bentuk spray mengeluarkan cairan sebagai semprotan halus.</p></div>
+<div class="card glass rv"><h3><span class="ic">✨</span>Karakteristik Spray</h3><ul><li>Praktis untuk diaplikasikan.</li><li>Dapat menyebar pada permukaan kulit tanpa mengoleskan produk dengan jari.</li><li>Perlu kemasan dan formula yang sesuai agar semprotan tidak tersumbat.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">⚠️</span>Perhatian</h3><p>Sediaan berbasis alkohol mudah terbakar dan dapat mengiritasi kulit. Jangan disemprotkan ke wajah, mata, kulit luka, atau dekat api.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">13</div><h2>Rancangan Penelitian</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">📝</span>Jenis Kegiatan</h3><p>Rancangan penelitian dapat berupa eksperimen sederhana untuk membuat ekstrak dan mengamati karakteristik fisik sediaan spray daun sirih.</p></div>
+<div class="card glass rv"><h3><span class="ic">📊</span>Variabel Pengamatan</h3><ul><li><b>Variabel bahan:</b> ekstrak daun sirih dan bahan pembawa yang ditetapkan.</li><li><b>Hasil pengamatan:</b> warna, aroma, homogenitas, pH bila alat tersedia, serta pola semprotan.</li><li><b>Variabel terkendali:</b> massa bahan, volume pelarut, waktu ekstraksi, dan cara penyimpanan.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">🏫</span>Lokasi & Waktu</h3><p>Perumahan 2, Lampung Tengah, tahun 2026, sesuai informasi rancangan awal.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">14</div><h2>Alat Penelitian</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🧰</span>Peralatan yang Tercantum</h3><div class="chips"><span class="chip">Baskom</span><span class="chip">Sendok</span><span class="chip">Gelas ukur</span><span class="chip">Penutup plastik</span><span class="chip">Karet pengikat</span></div></div>
+<div class="card glass rv"><h3><span class="ic">➕</span>Alat Pendukung yang Mungkin Diperlukan</h3><p>Untuk hasil yang lebih konsisten, dapat diperlukan timbangan, wadah bersih, saringan atau kertas saring, blender, botol sampel, label, serta alat ukur pH jika tersedia dan disetujui pembimbing.</p></div>
+<div class="card glass rv"><h3><span class="ic">🧽</span>Kebersihan Alat</h3><p>Alat harus bersih dan sesuai tujuan penggunaan. Catat alat yang benar-benar digunakan; jangan menuliskan alat tambahan sebagai fakta jika belum tersedia.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">15</div><h2>Bahan Penelitian</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🍃</span>Bahan Utama</h3><p><b>Daun sirih (<i>Piper betle</i> L.)</b> segar dan teridentifikasi dengan baik menjadi bahan tanaman utama yang diekstraksi.</p></div>
+<div class="card glass rv"><h3><span class="ic">🧪</span>Pelarut & Pembawa</h3><div class="chips"><span class="chip gold">Etanol 70%</span><span class="chip gold">Alkohol 70%*</span><span class="chip gold">Gliserin*</span><span class="chip gold">Propilen glikol*</span><span class="chip gold">Aquadest*</span></div><p style="margin-top:12px">*Bahan ini berasal dari daftar awal. Jumlah, fungsi, kompatibilitas, dan kebutuhan masing-masing harus ditetapkan bersama pembimbing.</p></div>
+<div class="card glass rv"><h3><span class="ic">🚫</span>Perubahan Formulasi</h3><p>Minyak serai merah dihapus. Formula berfokus pada ekstrak daun sirih sebagai bahan aktif herbal, sedangkan bahan pembawa hanya digunakan jika memang diperlukan dan disetujui.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">16</div><h2>Pembuatan Simplisia</h2><div class="bar"></div></div><div class="isi steps">
+<div class="card glass step rv"><div class="badge">1</div><div><h3>Sortasi Basah</h3><p>Pilih daun sirih yang sehat. Pisahkan daun yang busuk, berjamur, atau tercampur kotoran.</p></div></div>
+<div class="card glass step rv"><div class="badge">2</div><div><h3>Pencucian & Perajangan</h3><p>Cuci dengan air bersih, tiriskan, lalu potong menjadi bagian yang lebih kecil menggunakan alat bersih.</p></div></div>
+<div class="card glass step rv"><div class="badge">3</div><div><h3>Pengeringan</h3><p>Keringkan di tempat bersih dengan sirkulasi udara baik dan terhindar dari kontaminasi. Rancangan awal menyebut 10 hari; lama aktual perlu menyesuaikan kondisi dan kekeringan bahan.</p></div></div>
+<div class="card glass step rv"><div class="badge">4</div><div><h3>Penghalusan & Penyimpanan</h3><p>Haluskan bahan kering dan ayak bila tersedia. Simpan serbuk dalam wadah bersih, kering, tertutup, dan berlabel.</p></div></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">17</div><h2>Ekstraksi dengan Maserasi</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">⚗️</span>Rancangan dari Naskah Awal</h3><p>Rancangan awal mencantumkan <b>250 g serbuk daun sirih</b> dan <b>1.250 mL etanol 70%</b>, dengan maserasi selama 2 hari.</p></div>
+<div class="card glass rv"><h3><span class="ic">🔄</span>Alur Proses</h3><div class="flow"><span class="chip">Serbuk daun sirih</span><span class="arrow">→</span><span class="chip">Maserasi</span><span class="arrow">→</span><span class="chip">Penyaringan</span><span class="arrow">→</span><span class="chip">Pemekatan</span></div><p style="margin-top:10px">Wadah harus tertutup dan diberi label. Proses dilakukan mengikuti arahan pembimbing dan prosedur keselamatan penggunaan etanol.</p></div>
+<div class="card glass rv"><h3><span class="ic">🔥</span>Pemekatan & Keselamatan</h3><p>Jika pemekatan diperlukan, gunakan fasilitas dan metode yang sesuai di bawah pengawasan. Etanol mudah terbakar—jangan memanaskannya dengan api terbuka.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">METODE PENELITIAN</span><div class="num">18</div><h2>Formulasi & Pengamatan Spray</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">🧴</span>Prinsip Formulasi</h3><p>Ekstrak daun sirih menjadi bahan aktif herbal. Bahan pembawa seperti air atau pelarut hanya ditambahkan berdasarkan rancangan yang jelas; tidak ada minyak serai merah dalam formula revisi ini.</p></div>
+<div class="card glass rv"><h3><span class="ic">🔬</span>Pengamatan Fisik</h3><ul><li><b>Warna dan aroma:</b> catat perubahan secara konsisten.</li><li><b>Homogenitas:</b> amati apakah ada endapan atau pemisahan.</li><li><b>pH:</b> ukur jika alat tersedia dan prosedurnya sesuai.</li><li><b>Pola semprotan:</b> amati apakah cairan keluar merata dan nozzle tidak tersumbat.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">⚠️</span>Catatan Keamanan</h3><p>Jangan langsung digunakan pada kulit sebelum penilaian keamanan yang sesuai. Hindari klaim “aman” atau “antibakteri efektif” tanpa data pengujian.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap split"><div class="materi glass rv"><span class="eyebrow">PENUTUP</span><div class="num">19</div><h2>Evaluasi & Kesimpulan Sementara</h2><div class="bar"></div></div><div class="isi">
+<div class="card glass rv"><h3><span class="ic">📋</span>Data yang Perlu Dicatat</h3><ul><li>Berat awal bahan tanaman dan volume pelarut.</li><li>Lama ekstraksi dan kondisi penyaringan.</li><li>Warna, aroma, dan jumlah ekstrak yang diperoleh.</li><li>Komposisi formulasi yang benar-benar dibuat.</li><li>Hasil pengamatan fisik pada setiap waktu pemeriksaan.</li></ul></div>
+<div class="card glass rv"><h3><span class="ic">✅</span>Kesimpulan Sementara</h3><p>Daun sirih (<b><i>Piper betle</i> L.</b>) memiliki kandungan yang menarik untuk diteliti sebagai bahan aktif deodoran herbal. Namun, formulasi terbaik, efektivitas, kestabilan, dan keamanan produk baru dapat disimpulkan setelah pengujian dan pencatatan data.</p></div>
+<div class="card glass rv"><h3><span class="ic">📚</span>Saran</h3><p>Gunakan sumber ilmiah yang dapat ditelusuri, dokumentasikan setiap tahap, konsultasikan formulasi kepada pembimbing, dan lakukan pengujian lanjutan secara aman.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="wrap thanks rv">
+  <span class="tag">PROYEK PENELITIAN · DAUN SIRIH</span>
+  <h1>Terima Kasih</h1>
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Piper_betle.jpg?width=700" alt="Daun sirih Piper betle" loading="lazy" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Betel_leaf.jpg?width=700'">
+  <h2>ANY QUESTION?</h2>
+  <p class="sub">Pemanfaatan Ekstrak Daun Sirih (<i>Piper betle</i> L.) sebagai Bahan Deodoran Herbal</p>
+</div></section>
 
 </main>
-
-<nav class="nav">
-  <button id="prev" title="Sebelumnya (←)">‹</button>
-  <div class="dots" id="dots"></div>
-  <span class="count" id="count">01 / 08</span>
-  <button id="next" title="Berikutnya (→)">›</button>
-  <button id="full" title="Layar penuh (F)" style="font-size:.95rem">⛶</button>
+<nav class="nav" aria-label="Navigasi presentasi">
+  <button id="prev" aria-label="Halaman sebelumnya" title="Sebelumnya (←)">‹</button>
+  <div class="dots" id="dots"></div><span class="count" id="count">01 / 20</span>
+  <button id="next" aria-label="Halaman berikutnya" title="Berikutnya (→)">›</button>
+  <button id="full" aria-label="Layar penuh" title="Layar penuh (F)">⛶</button>
 </nav>
-
 <script>
-(function(){
-  const deck=document.getElementById('deck');
-  const slides=[...deck.querySelectorAll('.slide')];
-  const fxs=['zoom','slide','flip','rise','iris','spin','slide'];
-  const dots=document.getElementById('dots'), count=document.getElementById('count');
-  const prog=document.getElementById('progress');
-  const prev=document.getElementById('prev'), next=document.getElementById('next');
-  let cur=0, mx=0;
+(()=> {
+ const slides=[...document.querySelectorAll('.slide')],dots=document.getElementById('dots'),count=document.getElementById('count'),progress=document.getElementById('progress');
+ const prev=document.getElementById('prev'),next=document.getElementById('next');let cur=0;
+ slides.forEach((s,i)=>{s.querySelectorAll('.rv').forEach((e,k)=>e.style.setProperty('--i',k));const d=document.createElement('i');d.title='Buka halaman '+(i+1);d.setAttribute('role','button');d.setAttribute('aria-label','Buka halaman '+(i+1));d.onclick=()=>go(i);dots.appendChild(d)});
+ function ui(){[...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');progress.style.width=((cur+1)/slides.length*100)+'%';prev.disabled=cur===0;next.disabled=cur===slides.length-1}
+ function go(n){if(n<0||n>=slides.length||n===cur)return;const old=slides[cur],nw=slides[n];old.classList.remove('active');old.classList.add('leaving');setTimeout(()=>old.classList.remove('leaving'),480);nw.classList.remove('leaving');nw.scrollTop=0;nw.classList.add('active');cur=n;ui()}
+ slides[0].classList.add('active');ui();prev.onclick=()=>go(cur-1);next.onclick=()=>go(cur+1);
+ function toggleFull(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}}
+ document.getElementById('full').onclick=toggleFull;
+ addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(cur+1)}else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(cur-1)}else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);else if(e.key.toLowerCase()==='f')toggleFull()});
+ let tx=0,ty=0;addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy))go(dx<0?cur+1:cur-1)},{passive:true});
 
-  slides.forEach((s,i)=>{
-    s.querySelectorAll('.rv').forEach((el,k)=>el.style.setProperty('--i',k));
-    const d=document.createElement('i'); d.onclick=()=>go(i); dots.appendChild(d);
-  });
-
-  /* ---- Pohon (parallax 3 lapis) ---- */
-  function seeded(n){let s=n;return()=>(s=(s*9301+49297)%233280)/233280}
-  function trees(id,n,wMin,wMax,hMin,hMax,seed){
-    const el=document.getElementById(id), r=seeded(seed);
-    for(let i=0;i<n;i++){
-      const t=document.createElement('div'); t.className='tree';
-      t.style.left=(r()*100)+'%';
-      t.style.width=(wMin+r()*(wMax-wMin))+'vw';
-      t.style.height=(hMin+r()*(hMax-hMin))+'%';
-      el.appendChild(t);
-    }
-  }
-  trees('lFar',16,1.6,3.2,70,100,7);
-  trees('lMid',9,2.6,4.6,80,100,21);
-  trees('lNear',5,5,8.5,90,110,33);
-
-  function parallax(){
-    const x=cur;
-    document.getElementById('lFar').style.transform=`translateX(${-x*14+mx*6}px)`;
-    document.getElementById('lMid').style.transform=`translateX(${-x*34+mx*14}px)`;
-    document.getElementById('lNear').style.transform=`translateX(${-x*70+mx*30}px)`;
-  }
-  addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*2;parallax()});
-
-  /* ---- Navigasi & transisi ---- */
-  function ui(){
-    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
-    count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
-    prog.style.width=((cur+1)/slides.length*100)+'%';
-    prev.disabled=cur===0; next.disabled=cur===slides.length-1;
-    parallax();
-  }
-  function go(n){
-    if(n<0||n>=slides.length||n===cur)return;
-    const old=slides[cur], nw=slides[n];
-    deck.style.setProperty('--dir',n>cur?1:-1);
-    deck.className='deck fx-'+fxs[n%fxs.length];
-    slides.forEach(s=>{if(s!==old&&s!==nw)s.classList.remove('leaving','active')});
-    old.classList.remove('active'); old.classList.add('leaving');
-    setTimeout(()=>{if(!old.classList.contains('active'))old.classList.remove('leaving')},850);
-    nw.classList.remove('leaving'); nw.scrollTop=0; nw.classList.add('active');
-    cur=n; ui();
-  }
-  deck.className='deck fx-zoom';
-  slides[0].classList.add('active'); ui();
-
-  prev.onclick=()=>go(cur-1); next.onclick=()=>go(cur+1);
-  document.getElementById('full').onclick=toggleFull;
-  function toggleFull(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
-  addEventListener('keydown',e=>{
-    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(cur+1)}
-    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(cur-1)}
-    else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
-    else if(e.key==='f'||e.key==='F')toggleFull();
-  });
-  let tx=0,ty=0;
-  addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
-  addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)) go(dx<0?cur+1:cur-1);
-  },{passive:true});
-
-  /* ---- Kunang-kunang & daun berenergi (canvas) ---- */
-  const cv=document.getElementById('fx'), c=cv.getContext('2d');
-  let W,H,DPR=Math.min(devicePixelRatio||1,2);
-  function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;c.setTransform(DPR,0,0,DPR,0,0)}
-  size(); addEventListener('resize',size);
-  const R=Math.random;
-  const flies=Array.from({length:70},()=>({x:R()*W,y:R()*H,r:1+R()*2.4,vx:(R()-.5)*.3,vy:(R()-.5)*.25,p:R()*6.3,gold:R()<.3}));
-  const leaves=Array.from({length:16},()=>({x:R()*W,y:R()*H-H,s:9+R()*14,vy:.25+R()*.55,sw:R()*6.3,rot:R()*6.3,vr:(R()-.5)*.02,p:R()*6.3}));
-  function leaf(l,t){
-    const s=l.s, glow=.45+.55*Math.sin(t*.002+l.p);
-    c.save(); c.translate(l.x,l.y); c.rotate(l.rot); c.scale(1,Math.cos(t*.001+l.sw)*.4+.8);
-    c.shadowColor='rgba(124,255,107,'+glow+')'; c.shadowBlur=14;
-    const g=c.createLinearGradient(0,-s,0,s); g.addColorStop(0,'#8dff7a'); g.addColorStop(1,'#1c7a3a');
-    c.fillStyle=g; c.globalAlpha=.85;
-    c.beginPath(); c.moveTo(0,-s); c.bezierCurveTo(s*.95,-s*.4,s*.7,s*.6,0,s); c.bezierCurveTo(-s*.7,s*.6,-s*.95,-s*.4,0,-s); c.fill();
-    c.strokeStyle='rgba(232,255,200,'+(.4+glow*.6)+')'; c.lineWidth=1; c.beginPath(); c.moveTo(0,-s); c.lineTo(0,s); c.stroke();
-    c.restore();
-  }
-  function frame(t){
-    c.clearRect(0,0,W,H);
-    for(const f of flies){
-      f.x+=f.vx+Math.sin(t*.0007+f.p)*.15; f.y+=f.vy+Math.cos(t*.0009+f.p)*.15;
-      if(f.x<-10)f.x=W+10; if(f.x>W+10)f.x=-10; if(f.y<-10)f.y=H+10; if(f.y>H+10)f.y=-10;
-      const a=.35+.65*Math.abs(Math.sin(t*.0015+f.p)), rr=f.r*7;
-      const g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,rr);
-      const col=f.gold?'255,225,120':'170,255,140';
-      g.addColorStop(0,`rgba(${col},${a})`); g.addColorStop(.25,`rgba(${col},${a*.35})`); g.addColorStop(1,`rgba(${col},0)`);
-      c.fillStyle=g; c.beginPath(); c.arc(f.x,f.y,rr,0,6.3); c.fill();
-    }
-    for(const l of leaves){
-      l.y+=l.vy; l.x+=Math.sin(t*.0008+l.sw)*.6; l.rot+=l.vr;
-      if(l.y>H+30){l.y=-30;l.x=R()*W}
-      leaf(l,t);
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+ // Hutan dan partikel daun sirih: banyak daun melayang di semua halaman.
+ const forest=document.getElementById('forest');let seed=41;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+ for(let i=0;i<26;i++){const t=document.createElement('div');t.className='trunk';t.style.left=(rnd()*100)+'%';t.style.width=(2+rnd()*5)+'vw';t.style.height=(55+rnd()*45)+'%';forest.appendChild(t)}
+ const cv=document.getElementById('fx'),c=cv.getContext('2d');let W,H,DPR=Math.min(devicePixelRatio||1,2);
+ function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;c.setTransform(DPR,0,0,DPR,0,0)}size();addEventListener('resize',size);
+ const leaves=Array.from({length:48},()=>({x:rnd()*W,y:rnd()*H,s:7+rnd()*17,vy:.25+rnd()*.85,sw:rnd()*6.28,rot:rnd()*6.28,vr:(rnd()-.5)*.025,p:rnd()*6.28,alpha:.35+rnd()*.6}));
+ const flies=Array.from({length:90},()=>({x:rnd()*W,y:rnd()*H,r:1+rnd()*2.3,vx:(rnd()-.5)*.35,vy:(rnd()-.5)*.3,p:rnd()*6.28,gold:rnd()<.25}));
+ function drawLeaf(l,t){const s=l.s,g=.5+.5*Math.sin(t*.002+l.p);c.save();c.translate(l.x,l.y);c.rotate(l.rot);c.scale(.72,1);c.shadowColor='rgba(124,255,107,.8)';c.shadowBlur=7+g*9;c.globalAlpha=l.alpha;c.fillStyle=c.createLinearGradient(0,-s,0,s);const gr=c.createLinearGradient(0,-s,0,s);gr.addColorStop(0,'#b4ff86');gr.addColorStop(.48,'#48c85b');gr.addColorStop(1,'#0c5928');c.fillStyle=gr;c.beginPath();c.moveTo(0,-s);c.bezierCurveTo(s*1.2,-s*.45,s*.75,s*.65,0,s);c.bezierCurveTo(-s*.75,s*.65,-s*1.2,-s*.45,0,-s);c.fill();c.strokeStyle='rgba(232,255,200,.8)';c.lineWidth=1;c.beginPath();c.moveTo(0,-s*.85);c.lineTo(0,s*.88);for(let k=0;k<4;k++){let y=-s*.45+k*s*.3;c.moveTo(0,y);c.lineTo((k%2?1:-1)*s*.55,y+s*.22)}c.stroke();c.restore()}
+ function frame(t){c.clearRect(0,0,W,H);for(const f of flies){f.x+=f.vx+Math.sin(t*.0008+f.p)*.18;f.y+=f.vy+Math.cos(t*.001+f.p)*.14;if(f.x<-10)f.x=W+10;if(f.x>W+10)f.x=-10;if(f.y<-10)f.y=H+10;if(f.y>H+10)f.y=-10;const a=.25+.65*Math.abs(Math.sin(t*.0015+f.p)),rr=f.r*6,co=f.gold?'255,225,120':'170,255,140',g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,rr);g.addColorStop(0,`rgba(${co},${a})`);g.addColorStop(1,`rgba(${co},0)`);c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,rr,0,Math.PI*2);c.fill()}for(const l of leaves){l.y+=l.vy;l.x+=Math.sin(t*.0008+l.sw)*.65;l.rot+=l.vr;if(l.y>H+35){l.y=-35;l.x=rnd()*W}drawLeaf(l,t)}requestAnimationFrame(frame)}requestAnimationFrame(frame);
 })();
 </script>
 </body>
